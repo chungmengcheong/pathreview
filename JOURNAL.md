@@ -35,8 +35,9 @@ An alternative solution is to use LLM as a classifier, although the effort to im
 **Cohort ledger:** [X] Issue added to cohort ledger
 
 
-**Reproduction commit link:** [link to commit documenting the reproduced issue]
+**Reproduction commit link:** 
 
+https://github.com/chungmengcheong/pathreview/commit/2ac590662e70251df38bef162ed06975af6ed95b
 
 
 **Reproduction summary:**
@@ -63,11 +64,12 @@ FAILED tests/unit/test_bias_detector.py::TestBiasDetector::test_assumption_vs_ob
 
 **PLAN.md link:** [link to PLAN.md in your fork]
 
-https://github.com/chungmengcheong/pathreview/blob/fix/151-bias-detector-patterns/PLAN.md
+
 
 
 **Walkthrough video (recommended):** [link to your Loom video, ≤2 min — shared for early feedback]
 
+No video
 
 **Blockers or open questions:**
 
