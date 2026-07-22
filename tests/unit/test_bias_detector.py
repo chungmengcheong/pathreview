@@ -19,7 +19,7 @@ class TestBiasDetector:
         assert reason != ""
 
     def test_dismissive_bootcamp_language_rephrased_detected(self) -> None:
-        """Test alternative phrasing of dismissive bootcamp language is detected as biased."""
+        """Test alternative dismissive bootcamp language is detected as biased."""
         text = (
             "The candidate only attended a bootcamp, so this project lacks "
             "the rigor of a formal CS education."
