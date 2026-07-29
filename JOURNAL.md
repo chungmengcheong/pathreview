@@ -120,20 +120,32 @@ However, regex patterns are still deterministic pattern matching and more limite
 
 **Blockers:**
 
+None
+
 ---
 
 ### Check-in 2 (end of week)
 
-**PR link:** [link to your submitted pull request]
+**PR link:** 
 
-**Branch:** [the branch name you worked on, e.g. `fix/123-short-description`]
+https://github.com/ascherj/pathreview/pull/378
+
+**Branch:** 
+
+`fix/151-bias-detector-patterns`
 
 **What you built:**
-[1–3 sentences summarizing what your fix does and how it works]
+
+- Refactored the regex patterns to generalize the concept of SOURCE, PERSON, NEG_QUALITY and DESIRED_PROPERTY to capture their synoymns and plurals, and then standardize their usage across all the regex expressions so that the overall set of expressions are simplified and more easily maintainable.
+- Added a new pattern to connect those concepts within a sentence boundary, so that they don't have to be immediately next to each other to trigger a bias flag.
 
 **Tests added or updated:**
 [Which test files did you touch? What do they cover?]
 
-**Self-review confirmation:** [ ] make check passes  [ ] make test-unit passes
+- Added test_dismissive_bootcamp_language_rephrased_detected(self) in tests/unit/test_bias_detector.py to test that bias is detected for natural language rephrasings.
 
-**Draft PR feedback received from:** [name or Slack handle, or "none"]
+**Self-review confirmation:** [X] make check passes  [X] make test-unit passes
+
+**Draft PR feedback received from:** 
+
+none
