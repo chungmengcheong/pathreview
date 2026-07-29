@@ -75,3 +75,65 @@ No video
 **Blockers or open questions:**
 
 No blockers or open questions
+
+
+## Week 9 — Solution building & PR submission
+
+### Check-in 1 (mid-week)
+
+**Current progress:**
+
+Per the plan, I have:
+
+1. Refactored the regex patterns to generalize the concept of `SOURCE`, `PERSON`, `NEG_QUALITY` and `DESIRED_PROPERTY` to capture their synoymns and plurals, 
+
+```
+    SOURCE = r"(?:(?:coding\s+)?bootcamp|self-taught|online\s+(course)?)"
+    PERSON = r"(?:graduates?|developers?|programmers?|person|people)"
+    NEG_QUALITY = r"(?:insufficient|inadequate|lack|lacking|lacks)"
+    DESIRED_PROPERTY = r"(?:code|rigor|fundamentals|proper\s+training|preparation)"
+```
+
+and then standardize their usage across all the regex expressions so that the overall set of expressions are simplified and more easily maintainable, e.g., 
+
+```
+        rf"(?:{SOURCE})\s+(?:education|training)\s+(?:is\s+)?{NEG_QUALITY}",
+        rf"(?:{SOURCE})\s+attendance\s+means\s+({NEG_QUALITY})\s+{DESIRED_PROPERTY}",
+```
+
+2. Added a new pattern to connect those concepts within a sentence boundary, so that they don't have to be immediately next to each other to trigger a bias flag, i.e.:
+```
+        rf"(?:{SOURCE})\b"
+        r"(?:[^.]){0,40}?\b(?:so|because|since|thus|therefore|which\s+means)\b(?:[^.]){0,30}?\b"
+        rf"{NEG_QUALITY}\s+"
+        rf"(?:the\s+)?{DESIRED_PROPERTY}\b",
+```
+
+3. Added a new unit test `test_dismissive_bootcamp_language_rephrased_detected` to verify that the alternative rephrasing reported in #151 is correctly flagged as bias. 
+
+
+**Next steps:**
+
+The refactoring are passing the unit tests and have addressed the issue. 
+
+However, regex patterns are still deterministic pattern matching and more limited compared to a natural language classifier. I'll create a future enhancement request to refactor this module to an AI classifier if there is sufficient need. 
+
+**Blockers:**
+
+---
+
+### Check-in 2 (end of week)
+
+**PR link:** [link to your submitted pull request]
+
+**Branch:** [the branch name you worked on, e.g. `fix/123-short-description`]
+
+**What you built:**
+[1–3 sentences summarizing what your fix does and how it works]
+
+**Tests added or updated:**
+[Which test files did you touch? What do they cover?]
+
+**Self-review confirmation:** [ ] make check passes  [ ] make test-unit passes
+
+**Draft PR feedback received from:** [name or Slack handle, or "none"]
