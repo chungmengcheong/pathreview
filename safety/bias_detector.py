@@ -10,10 +10,12 @@ logger = structlog.get_logger()
 class BiasDetector:
     """Detect biased language in feedback."""
 
-    SOURCE = r"(?:(?:coding\s+)?bootcamp|self-taught|online\s+(course)?)"
+    SOURCE = r"(?:(?:coding\s+)?bootcamp|self-taught|online\s+(?:course)?)"
     PERSON = r"(?:graduates?|developers?|programmers?|person|people)"
     NEG_QUALITY = r"(?:insufficient|inadequate|lack|lacking|lacks)"
-    DESIRED_PROPERTY = r"(?:code|rigor|fundamentals|(proper\s+)?training|preparation)"
+    DESIRED_PROPERTY = r"(?:code|rigor|fundamentals|(?:proper\s+)?training|preparation)"
+    # Excludes sentence terminators and newlines so cross-topic text can't bridge a match.
+    GAP = r"(?:[^.!?\n])"
 
     DISMISSIVE_PATTERNS = [
         rf"(?:{SOURCE})\s+(?:education|training)\s+(?:is\s+)?{NEG_QUALITY}",
@@ -23,9 +25,9 @@ class BiasDetector:
         rf"(?:{SOURCE})\s+(?:doesn't|does\s+not)\s+prepare\s+(?:you|developers?)",
         rf"(?:{SOURCE})(?:\s+{PERSON})?\s+"
         rf"(?:is|are)\s+(?:not|never)\s+(?:equal|comparable)\s+to\s+(?:university|traditional|formal)",
-        rf"(?:{SOURCE})\s+attendance\s+means\s+({NEG_QUALITY})\s+{DESIRED_PROPERTY}",
+        rf"(?:{SOURCE})\s+attendance\s+means\s+{NEG_QUALITY}\s+{DESIRED_PROPERTY}",
         rf"(?:{SOURCE})\b"
-        r"(?:[^.]){0,40}?\b(?:so|because|since|thus|therefore|which\s+means)\b(?:[^.]){0,30}?\b"
+        rf"{GAP}{{0,30}}?\b(?:so|because|since|thus|therefore|which\s+means)\b{GAP}{{0,30}}?\b"
         rf"{NEG_QUALITY}\s+"
         rf"(?:the\s+)?{DESIRED_PROPERTY}\b",
     ]
@@ -34,7 +36,8 @@ class BiasDetector:
     DEMOGRAPHIC_PATTERNS = [
         rf"(?:young|old|aged)\s+(?:{PERSON})\s+(?:can't|cannot|won't|will\s+not)",
         rf"(?:{PERSON}|coming)\s+from\s+(?:poor|rich|working[\s-]?class)",
-        rf"(?:immigrant|international|foreign)\s+{PERSON}?.*(?:can't|cannot|won't|will\s+not|struggle|lacks?|missing)",
+        rf"(?:immigrant|international|foreign)\s+{PERSON}?{GAP}{{0,40}}?"
+        r"(?:can't|cannot|won't|will\s+not|struggle|lacks?|missing)",
     ]
 
     @staticmethod
