@@ -150,3 +150,56 @@ https://github.com/ascherj/pathreview/pull/378
 
 @LeslieCodePath
 
+
+## Week 10 — Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** [X] Yes  [ ] No — still awaiting review
+
+**Summary of feedback:**
+
+@LeslieCodePath left three inline comments on `safety/bias_detector.py`: 
+- two of the shared regex constants (`SOURCE`'s `online\s+(course)?` and `DESIRED_PROPERTY`'s `(proper\s+)?training`) used capturing groups whose output was never read, adding unnecessary overhead  
+- the 30/40-character gap in my "connector" pattern (e.g., "bootcamp... so... lacks rigor") wasn't bounded by sentence punctuation, so it could span across unrelated sentences instead of staying within one dismissive claim; 
+- a question on whether `re.DOTALL` was needed if the input could span multiple lines. They also left an encouraging general note that "regex is a bit of black magic" and that even once familiar with it, you can't judge how effective a pattern is until you test it.
+
+**How you responded:**
+
+- I fixed the two missed capturing groups to non-capturing groups. 
+- For the sentence-boundary issue, I replaced the ad hoc `[^.]` gap with a shared `GAP` constant that excludes `.`, `!`, `?`, and newlines, so the pattern can no longer bridge across a real sentence or line break 
+- For the `DOTALL` question, I checked the reasoning with Claude Code first: `DOTALL` only changes what `.` matches and wouldn't affect this pattern's boundary behavior, and enabling it to let `.*` cross newlines would have reopened the same false-positive risk the reviewer had just flagged — so I responded in the PR thread with that reasoning instead of applying the suggestion as-is.
+
+---
+
+### Reflection
+
+**What was harder than you expected?**
+
+Getting the regex patterns to actually work correctly took far longer than I expected. I now know what the PR reviewer meant by "even once you're very familiar w/ regex, it'll still be unclear... until you test it," :)
+
+I was clumsy with the mechanics of doing the git workflow, and doing so correctly and professionally took nearly as much care as the code itself, specifically on making sure that:
+- every clone, branch, commit, and pull request step was free of mistakes
+- content at each step (commit messages, PR description, feedback responses) met the expected level of detail and style
+
+**What did you learn about working in a large codebase?**
+
+The biggest lesson was around "fitting in" to the existing codebase. I had to take time upfront to internalize the codebase's existing mental model, coding patterns, and style guidelines, especially when they differed from how I'd naturally approach something. 
+
+I ended up refactoring the initial regex patterns in `bias_detector.py` to pull out and generalize SOURCE, PERSON, NEG_QUALITY and DESIRED_PROPERTY because I thought that made the code more readable and maintainable in the future. However that took up considerably more time for something that I didn't have to do in order to address the reported issue and make the code pass the failing unit tests. This was a trivial situation, but it has now made me more aware that I need to make a judgment call on whether to do a 'quick patch' or a more substantive refactoring when working on future issues.  
+
+**How did AI tools help — and where did they fall short?**
+
+For learning concepts, I used ChatGPT to learn regex from scratch and to decipher the intent behind the existing patterns in `bias_detector.py`. 
+
+For the mechanics, I used Claude Code to double-check my work, decipher error and output messages from the command line, and walk me step-by-step through Docker and git CLI setup. 
+
+The AI tools were also helpful in reasoning through a reviewer's suggestion rather than applying it blindly. I asked Claude whether `re.DOTALL` was needed for multi-line input, and it explained that `DOTALL` wouldn't fix the boundary issue and would reopen a false-positive risk already raised in review, which let me respond to the reviewer with an explanation rather than a guess.
+
+**What would you do differently if you started over?**
+
+If I were optimizing purely for time, I would have picked a different bug. The solution was clear after I had identified the issue (I needed to "loosen" the regex patterns), but I found regex to be difficult to build an intuition for and getting the patterns right was finicky work. 
+
+**What are you most proud of from this module?**
+
+I spent time scanning through parts of the codebase unrelated to my bug, and I'm proud that I understood both conceptually and mechanically much more of it than I expected going in. I feel more confident that I have a working sense of the patterns behind a modern AI application.
